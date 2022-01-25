@@ -7,7 +7,7 @@ mongoose
 
 // Schema are the rules to which the data must oblige
 const genereSchema = new mongoose.Schema({
-	genere: { type: String, minlength: 3, unique: true },
+	genere: { type: String, minlength: 3, index: { unique: true } },
 });
 
 // Pascal naming convention -> Class
@@ -15,15 +15,13 @@ const genereSchema = new mongoose.Schema({
 const Genere = mongoose.model('generes', genereSchema);
 
 // Asynchronous method, it returns a promise
-async function createCourse() {
+async function createGenere(genere) {
 	const genereInsert = new Genere({
-		genere: 'educational',
+		genere: genere,
 	});
 	const result = await genereInsert.save();
 	console.log(result);
 }
-
-createCourse();
 
 const generes = [
 	{ id: 1, genere: 'horror' },
@@ -36,4 +34,4 @@ const generes = [
 	{ id: 8, genere: 'documentary' },
 ];
 
-//for (index in generes) createGenere(generes[index].genere);
+for (index in generes) console.log(createGenere(generes[index].genere));
