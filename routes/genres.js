@@ -1,5 +1,20 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
+
+mongoose
+	.connect('mongodb://localhost/vidly')
+	.then(() => console.log('Connected to mongoDB'))
+	.catch((err) => console.log(`Error: ${err}`));
+
+// Schema are the rules to which the data must oblige
+const genereSchema = new mongoose.Schema({
+	genere: { type: String, minlength: 3, unique: true },
+});
+
+// Pascal naming convention -> Class
+// A model is a class that respects the rules defined in the schema
+const Genere = mongoose.model('generes', genereSchema);
 
 const generes = [
 	{ id: 1, genere: 'horror' },
@@ -12,8 +27,16 @@ const generes = [
 	{ id: 8, genere: 'documentary' },
 ];
 
+//---------------------------------------------------------------- GET
+async function getGenere(id) {
+	const output = await Genere.find();
+	console.log(output);
+	//return output;
+}
+
 router.get('/', (req, res) => {
-	res.send(JSON.stringify(generes));
+	const completeArray = getGenere();
+	res.send(completeArray);
 });
 
 router.get('/:id', (req, res) => {
@@ -23,30 +46,51 @@ router.get('/:id', (req, res) => {
 	res.send(genere);
 });
 
-router.post('/', (req, res) => {
-	const genere = {
-		id: generes.length + 1,
-		name: req.body.name,
-	};
+//---------------------------------------------------------------- POST
+async function createGenere(genere) {
+	const genereToBeCreated = new Genere({
+		genere: genere,
+	});
+	const result = await genereToBeCreated.save();
+	console.log(result);
+	return genereToBeCreated;
+}
 
-	generes.push(genere);
-	res.send(genere);
+router.post('/', (req, res) => {
+	const generated = createGenere(req.body.genere);
+	res.send(generated);
 });
+
+//---------------------------------------------------------------- PUT
+async function updateGenere(id, genere) {
+	try {
+		const genereToBeUpdated = await Genere.findByIdAndUpdate(
+			id,
+			{
+				$set: { genere: genere },
+			},
+			{ new: true }
+		);
+		console.log(genereToBeUpdated);
+		return genereToBeUpdated;
+	} catch (e) {
+		print(e);
+	}
+}
 
 router.put('/:id', (req, res) => {
-	const genere = generes.find((c) => c.id === parseInt(req.params.id));
-	if (!genere)
-		res.status(404).send('The genere with the given ID was not found');
-	genere.genere = req.body.genere;
-	res.send(genere);
+	res.send(updateGenere(String(req.params.id), String(req.body.genere)));
 });
 
+//---------------------------------------------------------------- DELETE
+async function deleteGenere(id) {
+	const genereToBeDeleted = await Genere.findOneAndDelete({ _id: id });
+	console.log(genereToBeDeleted);
+}
+
 router.delete('/:id', (req, res) => {
-	const genere = generes.find((c) => c.id === parseInt(req.params.id));
-	if (!genere)
-		res.status(404).send('The genere with the given ID was not found');
-	generes.splice(generes.indexOf(genere), 1);
-	res.status(201).send(genere);
+	const deletedGenere = deleteGenere(String(req.params.id));
+	res.status(201).send(deletedGenere);
 });
 
 module.exports = router;
