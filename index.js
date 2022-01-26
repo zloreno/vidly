@@ -1,15 +1,12 @@
-const Joi = require('joi');
-const genres = require('./routes/genres');
 const express = require('express');
+const generes = require('./routes/genres');
+const homepage = require('./routes/homepage');
 const app = express();
 
 app.use(express.json());
-
-app.get('/', (req, res) => {
-	req.send('Hello World');
-});
-
-app.use('/api/genres', genres);
+// For every request that points towards this suffix, use that router
+app.use('/api/generes', generes);
+app.use('/', homepage);
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}...`));
+app.listen(port, () => console.log(`Listening on port ${port}`));
