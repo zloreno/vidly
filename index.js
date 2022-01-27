@@ -1,12 +1,23 @@
+// modules
+const mongoose = require('mongoose');
 const express = require('express');
+const app = express();
+// scripts
 const generes = require('./routes/genres');
 const homepage = require('./routes/homepage');
+// middleware
 const logger = require('./middlware/logger');
+// connect to db
+mongoose
+	.connect('mongodb://localhost/vidly')
+	.then(() => console.log('Connected to mongoDB'))
+	.catch((err) => console.log(`Error: ${err}`));
 
-const app = express();
-
+//middleware
 app.use(express.json());
-app.use(logger);
+//app.use(logger);
+
+// routing
 // For every request that points towards this suffix, use that router
 app.use('/api/generes', generes);
 app.use('/', homepage);
