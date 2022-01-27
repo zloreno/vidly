@@ -12,11 +12,11 @@ const genereSchema = new mongoose.Schema({
 
 // Pascal naming convention -> Class
 // A model is a class that respects the rules defined in the schema
-const Genere = mongoose.model('generes', genereSchema);
+const Customers = mongoose.model('generes', genereSchema);
 
 // Asynchronous method, it returns a promise
 async function createGenere(genere) {
-	const genereInsert = new Genere({
+	const genereInsert = new Customers({
 		genere: genere,
 	});
 	const result = await genereInsert.save();

@@ -3,13 +3,15 @@ const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
 
+// Validation of the data in input
 function validateGenere(req) {
 	const schema = Joi.object({
-		genere: Joi.string().required(),
+		genere: Joi.string().required().min(3),
 	});
 	return schema.validate(req.body);
 }
 
+// Validation of the data inputted in the database
 // Schema are the rules to which the data must oblige
 const genereSchema = new mongoose.Schema({
 	genere: { type: String, minlength: 3, unique: true, required: true },
@@ -34,6 +36,12 @@ router.get('/:id', async (req, res) => {
 
 //---------------------------------------------------------------- POST
 router.post('/', async (req, res) => {
+	// Validate
+	const { error } = validateGenere(req);
+	if (error) {
+		console.log(error.details[0].message);
+		return res.status(400).send(error.details[0].message);
+	}
 	const genere = new Genere({ genere: req.body.genere });
 	try {
 		const savedGenere = await genere.save();
@@ -46,8 +54,11 @@ router.post('/', async (req, res) => {
 //---------------------------------------------------------------- PUT
 router.put('/:id', async (req, res) => {
 	// Validate
-	const { error } = validateGenere(req.body);
-	if (error) return res.status(400).send(error.details[0].message);
+	const { error } = validateGenere(req);
+	if (error) {
+		console.log(error.details[0].message);
+		return res.status(400).send(error.details[0].message); //.details[0].message.message
+	}
 	// Update
 	const genere = await Genere.findByIdAndUpdate(
 		req.params.id,
@@ -72,4 +83,5 @@ router.delete('/:id', async (req, res) => {
 	res.status(201).send(genere);
 });
 
+//---------------------------------------------------------------- Exports
 module.exports = router;

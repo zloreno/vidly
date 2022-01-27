@@ -2,9 +2,10 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-// scripts
+// routes
 const generes = require('./routes/genres');
 const homepage = require('./routes/homepage');
+const customers = require('./routes/customers');
 // middleware
 const logger = require('./middlware/logger');
 // connect to db
