@@ -1,24 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const { Genere, validate } = require('../models/generes');
 const router = express.Router();
-const Joi = require('joi');
-
-// Validation of the data in input
-function validateGenere(req) {
-	const schema = Joi.object({
-		genere: Joi.string().required().min(3),
-	});
-	return schema.validate(req.body);
-}
-
-// Validation of the data inputted in the database
-// Schema are the rules to which the data must oblige
-const genereSchema = new mongoose.Schema({
-	genere: { type: String, minlength: 3, unique: true, required: true },
-});
-
-// A model is a class that respects the rules defined in the schema
-const Genere = mongoose.model('generes', genereSchema);
 
 //---------------------------------------------------------------- GET
 router.get('/', async (req, res) => {
@@ -37,7 +20,7 @@ router.get('/:id', async (req, res) => {
 //---------------------------------------------------------------- POST
 router.post('/', async (req, res) => {
 	// Validate
-	const { error } = validateGenere(req);
+	const { error } = validate(req);
 	if (error) {
 		console.log(error.details[0].message);
 		return res.status(400).send(error.details[0].message);
@@ -54,7 +37,7 @@ router.post('/', async (req, res) => {
 //---------------------------------------------------------------- PUT
 router.put('/:id', async (req, res) => {
 	// Validate
-	const { error } = validateGenere(req);
+	const { error } = validate(req);
 	if (error) {
 		console.log(error.details[0].message);
 		return res.status(400).send(error.details[0].message); //.details[0].message.message

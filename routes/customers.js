@@ -1,39 +1,7 @@
-// isGold -> Boolean
-// name -> String
-// phone -> String
-
 const mongoose = require('mongoose');
+const { Customer, validate } = require('../models/customers');
 const express = require('express');
 const router = express.Router();
-const Joi = require('joi');
-
-// Validation of the data in input
-function validateCustomers(req) {
-	const schema = Joi.object({
-		isGold: Joi.boolean().required(),
-		name: Joi.string().required(),
-		phone: Joi.string().required().min(5),
-	});
-	return schema.validate(req.body);
-}
-
-function validateCustomerObject(obj) {
-	const schema = Joi.object({
-		isGold: Joi.boolean().required(),
-		name: Joi.string().required(),
-		phone: Joi.string().required().min(5),
-	});
-	return schema.validate(obj);
-}
-
-// Validation of the data in input
-const customerSchema = new mongoose.Schema({
-	isGold: { type: Boolean, required: true, default: false },
-	name: { type: String, required: true },
-	phone: { type: String, required: true, minlength: 5, maxlength: 20 },
-});
-
-const Customer = mongoose.model('customers', customerSchema);
 
 //---------------------------------------------------------------- GET
 router.get('/', async (req, res) => {
@@ -50,7 +18,7 @@ router.get('/:id', async (req, res) => {
 
 //---------------------------------------------------------------- POST
 router.post('/', async (req, res) => {
-	const { error } = validateCustomers(req);
+	const { error } = validate(req);
 	if (error) return res.status(400).send(error.details[0].message);
 
 	let customer = new Customer({
@@ -77,7 +45,8 @@ router.put('/:id', async (req, res) => {
 				name: req.body.name || oldCustomer.name,
 				phone: req.body.phone || oldCustomer.params,
 			},
-		}
+		},
+		{ new: true }
 	);
 	// Missing Joi validator
 	if (!customer)
