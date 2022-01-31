@@ -33,18 +33,22 @@ router.post('/', async (req, res) => {
 	}
 
 	const genere = await Genere.findById(req.body.genereId);
+	console.log('got the genere');
 	if (!genere)
 		return res.status(400).send(`Invalid Genere ID ${req.body.genereId}`);
+
+	console.log(`_id: ${genere._id} \nname: ${genere.genere}`);
 
 	const movie = new Movie({
 		title: req.body.title,
 		genere: {
 			_id: genere._id,
-			name: genere.name,
+			genere: genere.genere,
 		},
 		numberInStock: req.body.numberInStock,
 		dailyRentalRate: req.body.dailyRentalRate,
 	});
+
 	try {
 		const savedMovie = await movie.save();
 		res.send(savedMovie);
@@ -56,13 +60,14 @@ router.post('/', async (req, res) => {
 //---------------------------------------------------------------- PUT
 router.put('/:id', async (req, res) => {
 	const oldMovie = await Movie.findById(req.params.id);
+	console.log(oldMovie);
 	let movie = await Movie.findOneAndUpdate(
 		{ _id: req.params.id },
 		{
 			$set: {
 				title: req.body.title || oldMovie.title,
 				genere: {
-					name: req.body.genere.name || oldMovie.genere.name,
+					genere: req.body.genere.genere || oldMovie.genere.genere,
 				},
 				numberInStock: req.body.numberInStock || oldMovie.numberInStock,
 				dailyRentalRate: req.body.dailyRentalRate || oldMovie.dailyRentalRate,
