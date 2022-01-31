@@ -70,7 +70,7 @@ router.put('/:id', async (req, res) => {
 		},
 		{ new: true }
 	);
-	// Missing Joi validator
+	// Joi validator
 	if (!movie)
 		return res.status(404).send(`Movie with ID ${req.params.id} not found`);
 
