@@ -39,6 +39,8 @@ router.post('/', async (req, res) => {
 		return res.status(400).send(`Invalid Genere ID ${req.body.genereId}`); */
 
 	const movie = await Movie.findById(req.body.movieId);
+	if (!movie)
+		return res.status(400).send(`Movie ID ${req.body.movieId} not found`);
 
 	if (movie.numberInStock <= 0)
 		return res
@@ -46,14 +48,18 @@ router.post('/', async (req, res) => {
 			.send(`Movie ID ${req.body.movieId} is not available at the moment`);
 
 	const customer = await Customer.findById(req.body.customerId);
+	if (!customer)
+		return res.status(400).send(`Customer ID ${req.body.customerId} not found`);
 
 	const rental = new Rental({
 		customer: {
+			_id: customer._id,
 			name: customer.name,
 			isGold: customer.isGold,
 			phone: customer.phone,
 		},
 		movie: {
+			_id: movie._id,
 			title: movie.title,
 			dailyRentalRate: movie.dailyRentalRate,
 		},
