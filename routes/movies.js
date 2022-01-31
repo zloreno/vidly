@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
 	}
 
 	const genere = await Genere.findById(req.body.genereId);
-	console.log('got the genere');
+
 	if (!genere)
 		return res.status(400).send(`Invalid Genere ID ${req.body.genereId}`);
 

@@ -45,17 +45,29 @@ router.post('/', async (req, res) => {
 			.status(400)
 			.send(`Movie ID ${req.body.movieId} is not available at the moment`);
 
+	const customer = await Customer.findById(req.body.customerId);
+
+	const rental = new Rental({
+		customer: {
+			name: customer.name,
+			isGold: customer.isGold,
+			phone: customer.phone,
+		},
+		movie: {
+			title: movie.title,
+			dailyRentalRate: movie.dailyRentalRate,
+		},
+	});
+
+	console.log(rental);
+
 	try {
-		const movie = await Movie.findByIdAndUpdate(
+		await Movie.findByIdAndUpdate(
 			{ _id: req.body.movieId },
 			{
 				$inc: { numberInStock: -1 },
 			}
 		);
-		const rental = new Rental({
-			customerId: req.body.customerId,
-			movieId: req.body.movieId,
-		});
 
 		try {
 			const savedRental = await rental.save();

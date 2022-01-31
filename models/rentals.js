@@ -61,7 +61,7 @@ const rentalSchema = new mongoose.Schema({
 		required: false,
 	},
 
-	rentalFee: { type: Number, min: 0, default: 0 },
+	rentalFee: { type: Number, min: 0 },
 });
 
 const Rental = mongoose.model('rental', rentalSchema);
