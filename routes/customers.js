@@ -54,7 +54,6 @@ router.put('/:id', async (req, res) => {
 
 	return res.send(customer);
 });
-
 //---------------------------------------------------------------- DELETE
 router.delete('/:id', async (req, res) => {
 	const deletedCustomer = await Customer.findByIdAndDelete(req.params.id);

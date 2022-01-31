@@ -18,5 +18,6 @@ function validateGenere(req) {
 	return schema.validate(req.body);
 }
 
+module.exports.genereSchema = genereSchema;
 module.exports.Genere = Genere;
 module.exports.validate = validateGenere;

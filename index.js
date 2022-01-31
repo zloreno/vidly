@@ -6,6 +6,8 @@ const app = express();
 const generes = require('./routes/genres');
 const homepage = require('./routes/homepage');
 const customers = require('./routes/customers');
+const movies = require('./routes/movies');
+
 // middleware
 const logger = require('./middlware/logger');
 // connect to db
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use('/api/generes', generes);
 app.use('/', homepage);
 app.use('/api/customers', customers);
+app.use('/api/movies', movies);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
