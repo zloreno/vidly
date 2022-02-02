@@ -1,3 +1,5 @@
+const config = require('config');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
@@ -24,16 +26,15 @@ router.post('/', async (req, res) => {
 	}
 
 	// Make sure that user is not already registered
-	const existingUser = await User.findOne({ email: req.body.email });
-	if (!existingUser) return res.status(400).send(`Invalid email or password`);
+	const user = await User.findOne({ email: req.body.email });
+	if (!user) return res.status(400).send(`Invalid email or password`);
 
-	const validPassword = await bcrypt.compare(
-		req.body.password,
-		existingUser.password
-	);
+	const validPassword = await bcrypt.compare(req.body.password, user.password);
 	if (!validPassword) return res.status(400).send(`Invalid email or password`);
 
-	res.send(true);
+	const token = user.generateAuthToken();
+
+	res.send(token);
 });
 
 module.exports = router;
