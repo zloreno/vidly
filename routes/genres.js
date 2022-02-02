@@ -27,8 +27,8 @@ router.post('/', async (req, res) => {
 	}
 	const genere = new Genere({ genere: req.body.genere });
 	try {
-		const savedGenere = await genere.save();
-		res.send(savedGenere);
+		await genere.save();
+		res.send(genere);
 	} catch (err) {
 		res.status(400).send(err);
 	}

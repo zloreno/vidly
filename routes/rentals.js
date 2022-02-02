@@ -34,13 +34,19 @@ router.post('/', async (req, res) => {
 		return res.status(400).send(error.details[0].message);
 	}
 
+	if (!mongoose.Types.ObjectId.isValid(req.body.customerId))
+		return res.status(400).send(`Customer ID ${req.body.movieId} not valid`);
+
+	if (!mongoose.Types.ObjectId.isValid(req.body.movieId))
+		return res.status(400).send(`Movie ID ${req.body.movieId} not valid`);
+
 	/* 	const genere = await Genere.findById(req.body.genereId);
 	if (!genere)
 		return res.status(400).send(`Invalid Genere ID ${req.body.genereId}`); */
 
 	const movie = await Movie.findById(req.body.movieId);
 	if (!movie)
-		return res.status(400).send(`Movie ID ${req.body.movieId} not found`);
+		return res.status(404).send(`Movie ID ${req.body.movieId} not found`);
 
 	if (movie.numberInStock <= 0)
 		return res
@@ -48,6 +54,7 @@ router.post('/', async (req, res) => {
 			.send(`Movie ID ${req.body.movieId} is not available at the moment`);
 
 	const customer = await Customer.findById(req.body.customerId);
+
 	if (!customer)
 		return res.status(400).send(`Customer ID ${req.body.customerId} not found`);
 
@@ -67,23 +74,21 @@ router.post('/', async (req, res) => {
 
 	console.log(rental);
 
-	try {
-		await Movie.findByIdAndUpdate(
-			{ _id: req.body.movieId },
-			{
-				$inc: { numberInStock: -1 },
-			}
-		);
-
-		try {
-			const savedRental = await rental.save();
-			res.send(savedRental);
-		} catch (err) {
-			res.status(400).send(err);
-		}
+	/* 	try {
+		new Fawn.Task()
+			.save('rentals', rental)
+			.findByIdAndUpdate(
+				'movies',
+				{ _id: req.body.movieId },
+				{
+					$inc: { numberInStock: -1 },
+				}
+				// If you don't write run() nothing wil run
+			)
+			.run();
 	} catch (err) {
-		console.log(err);
-	}
+		res.status(400).send(`Something failed\n ${err}`);
+	} */
 });
 
 module.exports = router;

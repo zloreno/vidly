@@ -1,5 +1,6 @@
 // modules
 const mongoose = require('mongoose');
+const Joi = require('joi');
 const express = require('express');
 const app = express();
 // routes
@@ -11,6 +12,10 @@ const rentals = require('./routes/rentals');
 
 // middleware
 const logger = require('./middlware/logger');
+
+// functions
+Joi.objectId = require('joi-objectid')(Joi);
+
 // connect to db
 mongoose
 	.connect('mongodb://localhost/vidly')

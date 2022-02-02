@@ -6,7 +6,7 @@ const { genereSchema } = require('./generes');
 function validateMovie(req) {
 	const schema = Joi.object({
 		title: Joi.string().required(),
-		genereId: Joi.string().required(),
+		genereId: Joi.objectId().required(),
 		numberInStock: Joi.number().required(),
 		dailyRentalRate: Joi.number(),
 	});

@@ -50,8 +50,8 @@ router.post('/', async (req, res) => {
 	});
 
 	try {
-		const savedMovie = await movie.save();
-		res.send(savedMovie);
+		await movie.save();
+		res.send(movie);
 	} catch (err) {
 		res.status(400).send(err);
 	}
