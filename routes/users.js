@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const _ = require('lodash');
 const { User, validate } = require('../models/users');
 const express = require('express');
+const { required } = require('joi');
 const router = express.Router();
 
 //---------------------------------------------------------------- GET
@@ -33,14 +36,13 @@ router.post('/', async (req, res) => {
 			.status(400)
 			.send(`User with email ${req.body.email} already exists!`);
 
-	const user = new User({
-		name: req.body.name,
-		email: req.body.email,
-		password: req.body.password,
-	});
+	const user = new User(_.pick(req.body, ['name', 'email', 'password']));
+	const salt = await bcrypt.genSalt(10);
+	user.password = await bcrypt.hash(user.password, salt);
 
 	await user.save();
-	return res.send(user);
+
+	return res.send(_.pick(user, ['_id', 'name', 'email']));
 });
 
 module.exports = router;
