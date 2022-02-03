@@ -20,6 +20,7 @@ const auth = require('./routes/auth');
 
 // middleware
 const logger = require('./middlware/logger');
+const error = require('./middlware/error');
 
 // functions
 // npm i joi-object-id
@@ -44,6 +45,9 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+
+// Use express error middleware as the last middleware
+app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
