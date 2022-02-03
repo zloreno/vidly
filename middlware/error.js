@@ -1,5 +1,17 @@
+const winston = require('winston');
 function error(err, req, res, next) {
-	res.status(500).send('Internal Server Error');
+	// Option 1
+	//winston.log('error', err.message);
+	// Option 2 (with metadata)
+	winston.error(err.message, err);
+	// error
+	// warning
+	// information about the application
+	// verbose
+	// debug
+	// silly
+
+	res.status(500).send('Internal Server Error Lollo');
 }
 
 module.exports = error;

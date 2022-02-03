@@ -1,4 +1,6 @@
 // modules
+require('express-async-errors');
+const winston = require('winston');
 const config = require('config');
 if (!config.get('jwtPrivateKey')) {
 	console.log(`FATAL ERROR: jwtPrivateKey is not defined`);
@@ -8,6 +10,8 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 const express = require('express');
 const app = express();
+
+winston.add(new winston.transports.File({ filename: 'logfile.log' }));
 
 // routes
 const generes = require('./routes/genres');
@@ -20,7 +24,9 @@ const auth = require('./routes/auth');
 
 // middleware
 const logger = require('./middlware/logger');
-const error = require('./middlware/error');
+// We could either use this custom-made middleware for handling errors
+//const error = require('./middlware/error');
+// Or express async error npm package
 
 // functions
 // npm i joi-object-id
@@ -47,7 +53,7 @@ app.use('/api/users', users);
 app.use('/api/auth', auth);
 
 // Use express error middleware as the last middleware
-app.use(error);
+//app.use(error);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on port ${port}`));
