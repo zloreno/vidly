@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema({
 
 // NOT use an arrow function
 userSchema.methods.generateAuthToken = function () {
-	return jwt.sign({ _id: this._id }, config.get('jwtPrivateKey'));
+	const token = jwt.sign(
+		{ _id: this._id }, //mongoose.Types.String(this._id) },
+		config.get('jwtPrivateKey')
+	);
+	return token;
 };
 
 const User = mongoose.model('user', userSchema);

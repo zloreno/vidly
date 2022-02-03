@@ -3,7 +3,9 @@ const config = require('config');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
+
 const { User, validate } = require('../models/users');
+const auth = require('../middlware/auth');
 const express = require('express');
 const { required } = require('joi');
 const router = express.Router();
@@ -11,6 +13,13 @@ const router = express.Router();
 //---------------------------------------------------------------- GET
 router.get('/', async (req, res) => {
 	res.send(await User.find().sort('name'));
+});
+
+router.get('/myself', auth, async (req, res) => {
+	//Should be available to authenticated users
+	// In this case is authorization -> checking permission
+	const user = await User.findById(req.user._id).select('-password');
+	res.send(user);
 });
 
 router.get('/:id', async (req, res) => {
