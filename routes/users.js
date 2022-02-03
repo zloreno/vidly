@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 	res.send(await User.find().sort('name'));
 });
 
-router.get('/myself', auth, async (req, res) => {
+router.get('/me', auth, async (req, res) => {
 	//Should be available to authenticated users
 	// In this case is authorization -> checking permission
 	const user = await User.findById(req.user._id).select('-password');

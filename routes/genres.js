@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const { Genere, validate } = require('../models/generes');
 const auth = require('../middlware/auth');
+const admin = require('../middlware/admin');
 const router = express.Router();
 
 //---------------------------------------------------------------- GET
@@ -58,7 +59,7 @@ router.put('/:id', async (req, res) => {
 });
 
 //---------------------------------------------------------------- DELETE
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
 	const genere = await Genere.findOneAndDelete({ _id: req.params.id });
 	if (!genere)
 		return res

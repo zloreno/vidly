@@ -10,6 +10,7 @@ function validateUser(req) {
 		name: Joi.string().min(2).max(255).required(),
 		email: Joi.string().min(2).max(255).required().email(),
 		password: Joi.string().min(2).max(2048).required(),
+		isAdmin: Joi.boolean(),
 	});
 	return schema.validate(req.body);
 }
@@ -38,18 +39,22 @@ const userSchema = new mongoose.Schema({
 		required: true,
 		trim: true,
 	},
+	isAdmin: {
+		type: Boolean,
+		default: true,
+	},
 });
 
 // NOT use an arrow function
 userSchema.methods.generateAuthToken = function () {
 	const token = jwt.sign(
-		{ _id: this._id }, //mongoose.Types.String(this._id) },
+		{ _id: this._id, isAdmin: this.isAdmin },
 		config.get('jwtPrivateKey')
 	);
 	return token;
 };
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('users', userSchema);
 
 module.exports.User = User;
 module.exports.validate = validateUser;
