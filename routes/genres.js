@@ -6,21 +6,11 @@ const auth = require('../middlware/auth');
 const admin = require('../middlware/admin');
 const router = express.Router();
 
-const logConfiguration = {
-	transports: [
-		new winston.transports.File({
-			filename: 'logfile.log',
-		}),
-	],
-};
-
-const logger = winston.createLogger(logConfiguration);
-
 //---------------------------------------------------------------- GET
 router.get('/', async (req, res, next) => {
-	//throw new Error('Could not find the generes');
-	res.status(400).send('Bad request');
-	logger.error('Bad Request', e);
+	throw new Error('Could not find the generes');
+	//res.status(400).send('Bad request');
+	//winston.error('Bad Request');
 	//res.send(await Genere.find().sort('genere'));
 });
 
