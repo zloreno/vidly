@@ -15,12 +15,25 @@ winston.add(
 );
 
 // When we have an exception in the Node Environment but nowhere to handle such error
-process.on('uncaughtException', (ex) => {
-	console.log('We got an uncaught exception');
-	winston.error(ex.message, ex);
-});
+// Works only where there are NOT promises involved
+process
+	.on('unhandledRejection', (reason, p) => {
+		console.error(reason, '\n\nUnhandled Rejection at Promise:\n', p);
+		winston.error(reason, reason);
+		process.exit(1);
+	}) //winston.handleExceptions( new winston.transports.File({filename: 'uncaughtExceptions.log}))
+	.on('uncaughtException', (err) => {
+		console.error(err, 'Uncaught Exception thrown');
+		winston.error(err.message, err);
+		process.exit(1);
+	});
 
-throw new Error('Something failed during startup');
+const p = Promise.reject(new Error('failed miserably'));
+
+//await p;
+p.then(() => console.log('Done'));
+
+//throw new Error('Something failed during startup');
 
 const config = require('config');
 if (!config.get('jwtPrivateKey')) {
