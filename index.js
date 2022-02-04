@@ -1,11 +1,26 @@
 // modules
 require('express-async-errors');
 const winston = require('winston');
+require('winston-mongodb');
 winston.add(
 	new winston.transports.File({
 		filename: 'logfile.log',
 	})
 );
+winston.add(
+	new winston.transports.MongoDB({
+		db: 'mongodb://localhost/vidly',
+		level: 'error',
+	})
+);
+
+// When we have an exception in the Node Environment but nowhere to handle such error
+process.on('uncaughtException', (ex) => {
+	console.log('We got an uncaught exception');
+	winston.error(ex.message, ex);
+});
+
+throw new Error('Something failed during startup');
 
 const config = require('config');
 if (!config.get('jwtPrivateKey')) {
