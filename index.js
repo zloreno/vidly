@@ -11,8 +11,6 @@ const Joi = require('joi');
 const express = require('express');
 const app = express();
 
-winston.add(new winston.transports.File({ filename: 'logfile.log' }));
-
 // routes
 const generes = require('./routes/genres');
 const homepage = require('./routes/homepage');
@@ -23,7 +21,8 @@ const users = require('./routes/users');
 const auth = require('./routes/auth');
 
 // middleware
-const logger = require('./middlware/logger');
+//const logger = require('./middlware/logger');
+
 // We could either use this custom-made middleware for handling errors
 //const error = require('./middlware/error');
 // Or express async error npm package
