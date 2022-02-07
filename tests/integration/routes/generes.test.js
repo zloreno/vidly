@@ -1,14 +1,14 @@
 const { response } = require('express');
 const mongoose = require('mongoose');
 const request = require('supertest');
-const { Genere } = require('../../models/generes');
-const { User } = require('../../models/users');
+const { Genere } = require('../../../models/generes');
+const { User } = require('../../../models/users');
 
 let server;
 
 describe('/api/generes', () => {
 	beforeEach(() => {
-		server = require('../../index');
+		server = require('../../../index');
 	});
 	afterEach(async () => {
 		server.close;
