@@ -4,6 +4,9 @@ require('winston-mongodb');
 
 module.exports = function () {
 	winston.add(
+		new winston.transports.Console({ colorize: true, prettyPrint: true })
+	);
+	winston.add(
 		new winston.transports.File({
 			filename: 'logfile.log',
 		})
@@ -12,6 +15,9 @@ module.exports = function () {
 		new winston.transports.MongoDB({
 			db: 'mongodb://localhost/vidly',
 			level: 'info',
+			options: {
+				useUnifiedTopology: true,
+			},
 		})
 	);
 

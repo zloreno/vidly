@@ -1,5 +1,6 @@
 // modules
 const express = require('express');
+const winston = require('winston');
 const app = express();
 
 // require logging first just in case anything fails
@@ -10,4 +11,8 @@ require('./startup/config')();
 require('./startup/validation')();
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
+const server = app.listen(port, () =>
+	winston.info(`Listening on port ${port}`)
+);
+
+module.exports = server;

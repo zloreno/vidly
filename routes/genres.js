@@ -4,17 +4,15 @@ const express = require('express');
 const { Genere, validate } = require('../models/generes');
 const auth = require('../middlware/auth');
 const admin = require('../middlware/admin');
+const validateId = require('../middlware/valid_req_id');
 const router = express.Router();
 
 //---------------------------------------------------------------- GET
 router.get('/', async (req, res, next) => {
-	throw new Error('Could not find the generes');
-	//res.status(400).send('Bad request');
-	//winston.error('Bad Request');
-	//res.send(await Genere.find().sort('genere'));
+	res.send(await Genere.find().sort('genere'));
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateId, async (req, res) => {
 	const genere = await Genere.findById(req.params.id);
 	if (!genere)
 		return res

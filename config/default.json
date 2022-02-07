@@ -1,1 +1,1 @@
-{ "jwtPrivateKey": "" }
+{ "jwtPrivateKey": "", "NODE_ENV": "dev", "db": "mongodb://localhost/vidly" }
