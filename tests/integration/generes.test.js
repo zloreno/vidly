@@ -1,6 +1,9 @@
+const { response } = require('express');
 const mongoose = require('mongoose');
 const request = require('supertest');
 const { Genere } = require('../../models/generes');
+const { User } = require('../../models/users');
+
 let server;
 
 describe('/api/generes', () => {
@@ -48,7 +51,7 @@ describe('/api/generes', () => {
 			);
 		});
 
-		it('Return status 400 when wrong _id', async () => {
+		it('Return status 404 when wrong _id', async () => {
 			const payload_loaded = {
 				_id: new mongoose.Types.ObjectId().toHexString(),
 				genere: 'genere_1',
@@ -75,6 +78,61 @@ describe('/api/generes', () => {
 					_id: payload_not_loaded._id,
 					genere: payload_not_loaded.genere,
 				})
+			);
+		});
+	});
+
+	describe('POST /', () => {
+		// Define Happy Path, and then in each test we change
+		// one parameter that clearly aligns with the name
+		// of the test
+
+		beforeEach(() => {
+			token = new User().generateAuthToken();
+			genere = 'genere_1';
+		});
+
+		let token;
+		let genere;
+
+		const execute = async () => {
+			return await request(server)
+				.post('/api/generes')
+				.set('x-auth-token', token)
+				.send({ genere });
+		};
+
+		it('should return 401 if client is not logged in', async () => {
+			token = '';
+			const response = await execute();
+			expect(response.status).toBe(401);
+		});
+
+		it('should return 400 if genere less than 3 characters', async () => {
+			genere = '12';
+			const response = await execute();
+			expect(response.status).toBe(400);
+		});
+
+		it('should return 400 if genere over 50 character', async () => {
+			genere = new Array(52).join('a');
+			const response = await execute();
+			expect(response.status).toBe(400);
+		});
+
+		it('should save genere if valid', async () => {
+			const response = await execute();
+			const returned = await Genere.findOne({ genere: 'genere_1' });
+			expect(returned).not.toBeNull();
+			expect(response.status).toBe(200);
+		});
+
+		it('should return genere if it is valid', async () => {
+			const response = await execute();
+			expect(response.status).toBe(200);
+			expect(response.body).toHaveProperty('_id');
+			expect(response.body).toEqual(
+				expect.objectContaining({ genere: genere })
 			);
 		});
 	});

@@ -1,5 +1,6 @@
 {
 	"jwtPrivateKey": "1234",
 	"NODE_ENV": "test",
+	"PORT": 0,
 	"db": "mongodb://localhost/vidly_test"
 }

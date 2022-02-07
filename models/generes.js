@@ -4,7 +4,13 @@ const Joi = require('joi');
 // Validation of the data inputted in the database
 // Schema are the rules to which the data must oblige
 const genereSchema = new mongoose.Schema({
-	genere: { type: String, minlength: 3, unique: true, required: true },
+	genere: {
+		type: String,
+		minlength: 3,
+		maxlength: 50,
+		unique: true,
+		required: true,
+	},
 });
 
 // A model is a class that respects the rules defined in the schema
@@ -13,7 +19,7 @@ const Genere = mongoose.model('generes', genereSchema);
 // Validation of the data in input
 function validateGenere(req) {
 	const schema = Joi.object({
-		genere: Joi.string().required().min(3),
+		genere: Joi.string().required().min(3).max(50),
 	});
 	return schema.validate(req.body);
 }

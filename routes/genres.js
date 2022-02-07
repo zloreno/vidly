@@ -4,7 +4,7 @@ const express = require('express');
 const { Genere, validate } = require('../models/generes');
 const auth = require('../middlware/auth');
 const admin = require('../middlware/admin');
-const validateId = require('../middlware/valid_req_id');
+const validateId = require('../middlware/validateObjectId');
 const router = express.Router();
 
 //---------------------------------------------------------------- GET
