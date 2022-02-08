@@ -4,7 +4,7 @@
 	"description": "Coding project for **Code with Mosh** Node.JS course",
 	"main": "index.js",
 	"scripts": {
-		"test": "jest --watchAll --verbose --detectOpenHandles --maxWorkers=1"
+		"test": "jest --watchAll --verbose --detectOpenHandles --maxWorkers=1 --coverage"
 	},
 	"repository": {
 		"type": "git",

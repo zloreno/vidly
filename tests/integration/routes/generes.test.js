@@ -42,8 +42,6 @@ describe('/api/generes', () => {
 
 			const res = await request(server).get(`/api/generes/${payload._id}`);
 
-			console.log(res.body);
-
 			expect(res.status).toBe(200);
 			expect([res.body].length).toBe(1);
 			expect(res.body).toEqual(
@@ -69,8 +67,6 @@ describe('/api/generes', () => {
 			const res = await request(server).get(
 				`/api/generes/${payload_not_loaded._id}`
 			);
-
-			console.log(res.body);
 
 			expect(res.status).toBe(404);
 			expect(res.body).toEqual(
